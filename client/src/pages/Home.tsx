@@ -29,7 +29,7 @@ const navItems = [
   { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#work" },
-  { label: "Process", href: "#process" },
+  { label: "Goals", href: "#goals" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -94,6 +94,43 @@ const techStack = [
   { category: "Design & prototyping", items: ["Figma", "Canva"] },
   { category: "Game development", items: ["Unity"] },
   { category: "Motion / video editing", items: ["Adobe After Effects"] },
+];
+
+const goalAxis = [
+  { label: "Year 3", note: "foundations" },
+  { label: "Year 4", note: "capstone + internship" },
+  { label: "2028", note: "first role" },
+];
+
+const goals = [
+  {
+    number: "01",
+    kind: "short-term",
+    window: "now → AY 2026-27",
+    title: "Land an internship",
+    description: "Step into a real team during third year and watch classroom code grow into production software.",
+  },
+  {
+    number: "02",
+    kind: "short-term",
+    window: "AY 2027-28",
+    title: "Ship a capstone project",
+    description: "Build and deploy a full-stack app that solves an actual problem on campus — proof over polish.",
+  },
+  {
+    number: "03",
+    kind: "long-term",
+    window: "by 2028",
+    title: "Master modern frameworks",
+    description: "Get genuinely productive in React, TypeScript, and deployment so ideas move from sketch to shipped fast.",
+  },
+  {
+    number: "04",
+    kind: "long-term",
+    window: "ongoing",
+    title: "Grow a strong portfolio",
+    description: "A curated trail of projects that show both the craft and the thinking behind every screen.",
+  },
 ];
 
 const ease = [0.23, 1, 0.32, 1] as const;
@@ -332,10 +369,42 @@ export default function Home() {
           </div>
         </motion.section>
 
-        <motion.section id="process" className="process-section section-pad section-cream" initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
-          <div className="process-grid page-width">
-            <motion.div className="section-label" variants={reveal}><span>04</span><span className="vertical-rule" /><span>Process</span></motion.div>
-            <div className="process-content"><motion.div className="process-lead" variants={reveal}><h2 className="section-title">Make room<br /><em>for the messy middle.</em></h2><p className="body-copy">The best part of a project is usually the bit between the first idea and the final polish. That’s where I listen, test, learn, and make the work more honest.</p></motion.div><motion.div className="process-steps" variants={stagger}><motion.div className="process-step" variants={reveal}><span>01</span><div><strong>Listen closely</strong><p>Get clear on the person, the problem, and the constraint.</p></div></motion.div><motion.div className="process-step" variants={reveal}><span>02</span><div><strong>Make it visible</strong><p>Turn assumptions into maps, sketches, and something we can react to.</p></div></motion.div><motion.div className="process-step" variants={reveal}><span>03</span><div><strong>Keep it useful</strong><p>Build the simplest version that teaches us what to do next.</p></div></motion.div></motion.div></div>
+        <motion.section id="goals" className="goals-section section-pad section-cream" initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
+          <div className="page-width">
+            <motion.div className="goals-head" variants={reveal}>
+              <div className="goals-label">
+                <span>04</span>
+                <span className="vertical-rule" />
+                <span>Goals</span>
+                <em>/ roadmap</em>
+              </div>
+              <h2 className="section-title">Plotted for<br /><em>the finish line.</em></h2>
+              <p className="goal-sub">A realistic map from third year to first role, with every checkpoint tied to something I'm actively chasing right now.</p>
+            </motion.div>
+            <motion.div className="roadmap-axis" variants={stagger}>
+              {goalAxis.map((stop) => (
+                <motion.span key={stop.label} variants={reveal}>
+                  <b>{stop.label}</b>
+                  {stop.note}
+                </motion.span>
+              ))}
+            </motion.div>
+            <motion.div className="goal-route" variants={stagger}>
+              {goals.map((goal) => (
+                <motion.div className="goal-milestone" key={goal.number} variants={reveal} whileHover={{ x: 8 }}>
+                  <span className="goal-num">{goal.number}</span>
+                  <span className="goal-node" aria-hidden="true" />
+                  <div className="goal-body">
+                    <div className="goal-body-top">
+                      <span className="goal-tag">{goal.kind}</span>
+                      <span className="goal-window">{goal.window}</span>
+                    </div>
+                    <h3>{goal.title}</h3>
+                    <p>{goal.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </motion.section>
 
