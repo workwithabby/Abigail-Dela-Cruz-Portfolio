@@ -16,11 +16,13 @@ import {
   Menu,
   Moon,
   Send,
+  Star,
   Sun,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTheme } from "@/contexts/ThemeContext";
+import heroPhoto from "@/assets/photo.png";
 
 const navItems = [
   { label: "About", href: "#about" },
@@ -221,11 +223,19 @@ export default function Home() {
             </div>
             <motion.div className="hero-visual" variants={softReveal}>
               <div className="hero-image-wrap">
-                <img src="https://images.pexels.com/photos/5473298/pexels-photo-5473298.jpeg" alt="A warm editorial desk scene with a laptop, sketchbook, and orange note" className="hero-image" />
-                <div className="hero-annotation">field notes / v0.3</div>
-                <div className="image-caption"><span>01 / 04</span><span>notes from the build</span></div>
+                <img src={heroPhoto} alt="Portrait of Abigail Dela Cruz" className="hero-image" />
+                <motion.div className="accent accent-star" aria-hidden="true">
+                  <motion.span animate={{ rotate: [-16, 12, -16], y: [0, -7, 0] }} transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}><Star size={22} fill="currentColor" /></motion.span>
+                </motion.div>
+                <motion.div className="accent accent-dots" aria-hidden="true">
+                  <motion.span animate={{ y: [0, -7, 0] }} transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}><i className="dot" /><i className="dot" /><i className="dot" /></motion.span>
+                </motion.div>
+                <div className="accent accent-squiggle" aria-hidden="true">
+                  <span className="squiggle">
+                    <svg width="46" height="30" viewBox="0 0 46 30" fill="none"><path d="M2 20 C6 5 14 5 18 14 C22 23 30 23 34 15 C37 9 42 6 45 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+                  </span>
+                </div>
               </div>
-              <motion.div className="hero-stamp" aria-hidden="true" animate={{ rotate: [-15, -12, -15] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}><span>curious</span><span>by default</span></motion.div>
               <div className="hero-side-label">scroll to explore <ArrowDownRight size={14} /></div>
             </motion.div>
           </div>

@@ -152,14 +152,22 @@
   .hero-note { display: flex; align-items: center; gap: 10px; margin-top: 74px; color: var(--muted-foreground); letter-spacing: 0.04em; text-transform: none; }
   .hero-note span { color: var(--signal); font-weight: 700; text-transform: uppercase; letter-spacing: 0.13em; }
   .hero-visual { position: relative; min-width: 0; }
-  .hero-image-wrap { position: relative; margin-left: auto; width: min(100%, 590px); }
-  .hero-image-wrap::before { position: absolute; top: 22px; right: -20px; bottom: -18px; left: 20px; z-index: 0; border: 1px solid var(--signal); content: ""; }
+  .hero-image-wrap { position: relative; margin: -34px clamp(0px, 4vw, 60px) 0 auto; width: min(100%, 460px); }
+  .hero-image-wrap::before { position: absolute; inset: -14px; z-index: 0; border: 1px solid var(--signal); content: ""; transition: transform 280ms var(--ease-out); }
+  .hero-image-wrap:hover::before { transform: translate(-5px, 6px); }
+  .hero-image-wrap .accent { position: absolute; z-index: 0; display: grid; place-items: center; pointer-events: none; color: var(--signal); transition: transform 280ms var(--ease-out); }
+  .hero-image-wrap:hover .accent { transform: translate(var(--pop-x, 0), var(--pop-y, 0)) scale(1.15); }
+  .accent-star { top: -32px; left: -38px; --pop-x: -6px; --pop-y: -7px; transform: rotate(-14deg); }
+  .accent-dots { top: 22px; right: -18px; --pop-x: 8px; --pop-y: -7px; }
+  .accent-dots span { display: flex; align-items: flex-end; gap: 5px; }
+  .accent-dots .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .accent-dots .dot:nth-child(1) { width: 9px; height: 9px; }
+  .accent-dots .dot:nth-child(3) { width: 4px; height: 4px; background: var(--green); }
+  .accent-squiggle { right: -30px; bottom: -22px; color: var(--green); --pop-x: 7px; --pop-y: 6px; }
   .hero-annotation, .project-annotation { position: absolute; z-index: 3; color: var(--signal); font-size: 9px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; transform: rotate(-90deg); transform-origin: left top; }
   .hero-annotation { top: 88px; left: -17px; }
-  .hero-image { position: relative; z-index: 1; display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; filter: saturate(0.8) contrast(0.98); }
+  .hero-image { position: relative; z-index: 1; display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; filter: saturate(0.8) contrast(0.98); }
   .image-caption { position: absolute; right: 0; bottom: 0; left: 0; z-index: 2; display: flex; justify-content: space-between; padding: 13px 16px; background: linear-gradient(transparent, rgba(0,0,0,.66)); color: #fffaf1; letter-spacing: 0.08em; }
-  .hero-stamp { position: absolute; bottom: -25px; left: -46px; z-index: 3; display: grid; place-items: center; width: 100px; height: 100px; border: 1px solid var(--signal); border-radius: 50%; color: var(--signal); font-size: 10px; font-weight: 700; line-height: 1.1; letter-spacing: 0.08em; text-align: center; text-transform: uppercase; transform: rotate(-15deg); }
-  .hero-stamp::after { position: absolute; inset: 7px; border: 1px dashed var(--signal); border-radius: 50%; content: ""; }
   .hero-side-label { position: absolute; top: 42%; right: -78px; display: flex; align-items: center; gap: 8px; color: var(--muted-foreground); font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; transform: rotate(90deg); transform-origin: right top; }
   .hero-rule { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: center; margin-top: 104px; color: var(--muted-foreground); }
   .hero-rule::before, .hero-rule::after { height: 1px; background: var(--border); content: ""; }
@@ -364,7 +372,6 @@
     .hero-description { max-width: 340px; }
     .hero-note { margin-top: 46px; }
     .hero-visual { padding: 0 14px 28px 0; }
-    .hero-stamp { left: -8px; bottom: -9px; width: 84px; height: 84px; font-size: 9px; }
     .hero-side-label { display: none; }
     .hero-rule { margin-top: 28px; }
     .about-grid, .skills-grid, .process-grid, .contact-grid { display: block; }
