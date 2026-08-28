@@ -23,6 +23,7 @@ import {
 import { toast } from "sonner";
 import { useTheme } from "@/contexts/ThemeContext";
 import heroPhoto from "@/assets/photo.png";
+import logo from "@/assets/logo.png";
 
 const navItems = [
   { label: "About", href: "#about" },
@@ -164,6 +165,7 @@ export default function Home() {
       <motion.div className="bg-ambient" aria-hidden="true" animate={{ x: [0, 46, 0], y: [0, -34, 0], scale: [1, 1.07, 1] }} transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }} />
       <div className="grain-overlay" aria-hidden="true" />
       <aside className="identity-rail" aria-label="Portfolio identity rail">
+        <a href="#top" className="rail-logo" aria-label="Abigail Dela Cruz home"><img src={logo} alt="" /></a>
         <div className="rail-vertical-label">abigail / dev · bsit</div>
         <div className="rail-bottom"><span>manila</span><span>2026</span></div>
       </aside>
@@ -171,6 +173,7 @@ export default function Home() {
       <motion.header className={`site-header${scrolled ? " is-scrolled" : ""}`} initial={{ y: -18, opacity: 0 }} animate={{ y: 0, opacity: 1, boxShadow: scrolled ? "0 26px 46px -34px rgba(0,0,0,0.45)" : "0 0 0 rgba(0,0,0,0)" }} transition={{ duration: 0.55, ease }}>
         <div className="header-inner">
           <a href="#top" className="brand" aria-label="Abigail Dela Cruz home">
+            <img src={logo} alt="" className="brand-logo" />
             <span className="brand-wordmark">abigail <em>/</em> dev</span>
             <span className="brand-live" aria-hidden="true" />
           </a>
@@ -211,7 +214,7 @@ export default function Home() {
         <motion.section className="hero-section section-pad" initial="hidden" animate="visible" variants={stagger}>
           <div className="hero-grid page-width">
             <div className="hero-copy">
-              <motion.div className="eyebrow" variants={reveal}><span className="signal-dot" /> field notes / intro <span className="eyebrow-line" /></motion.div>
+              <motion.div className="eyebrow" variants={reveal}><span className="signal-dot" /> Portfolio / Intro <span className="eyebrow-line" /></motion.div>
               <motion.h1 className="hero-title" variants={reveal}>Hi, I’m <span>Abigail Dela Cruz</span></motion.h1>
               <motion.p className="hero-subheading" variants={reveal}>Information Technology Student</motion.p>
               <motion.p className="hero-description" variants={reveal}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Proin sagittis nisl rhoncus mattis nibh.</motion.p>
