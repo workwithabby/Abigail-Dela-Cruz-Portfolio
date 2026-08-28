@@ -1,6 +1,6 @@
 /* Quiet Signal, refreshed: white/black surfaces with signal pink, a calmer About narrative, and motion that feels like paper sliding into place. */
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -30,13 +30,34 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
-const projects = [
+interface Project {
+  number: string;
+  type: string;
+  title: string;
+  description: string;
+  role: string;
+  overview: string;
+  highlights: string[];
+  tags: string[];
+  image: string;
+  imageAlt: string;
+}
+
+const projects: Project[] = [
   {
     number: "01",
     type: "Campus utility · 2026",
     title: "StudyLoop",
     description:
       "A calmer way for student groups to share notes, deadlines, and the small details that keep a semester moving.",
+    role: "Student developer & UX designer",
+    overview:
+      "StudyLoop began as a question: why do student groups juggle five different apps just to keep one semester moving? I interviewed classmates, mapped the messiest workflows, and shaped them into a single, calmer space for notes, deadlines, and the small updates that usually get lost.",
+    highlights: [
+      "Mapped group workflows through interviews with student org members to find the real friction points.",
+      "Prototyped the core flows in Figma and tested them with a small group before writing any code.",
+      "Built the first working version as a React app and kept a public changelog to stay honest about scope.",
+    ],
     tags: ["React", "UX research", "Firebase"],
     image: "https://images.pexels.com/photos/33266805/pexels-photo-33266805.jpeg",
     imageAlt: "Wireframe sketches and interface notes on a warm paper desk",
@@ -47,6 +68,14 @@ const projects = [
     title: "Stockroom",
     description:
       "An inventory dashboard concept for a campus lab, designed to make handoffs and low-stock moments easy to spot.",
+    role: "Student developer & system designer",
+    overview:
+      "Stockroom came from a lab manager’s handwritten spreadsheet and a lot of sticky notes. I designed a dashboard that makes handoffs clear, low-stock moments obvious, and every update traceable — so the person running the lab can trust the numbers instead of re-counting.",
+    highlights: [
+      "Designed a small design system in Figma first, so labels, states, and empty screens stayed consistent.",
+      "Prototyped the dashboard with TypeScript and React, using PostgreSQL for the data model.",
+      "Ran a handoff exercise with the lab team to catch the details only real users notice.",
+    ],
     tags: ["TypeScript", "Design system", "PostgreSQL"],
     image: "https://images.pexels.com/photos/7858852/pexels-photo-7858852.jpeg",
     imageAlt: "Hands collaborating around a laptop and sketchpad",
@@ -87,11 +116,25 @@ export default function Home() {
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFolders, setOpenFolders] = useState<string[]>([]);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const { scrollY, scrollYProgress } = useScroll();
   const headerProgress = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: 0.4 });
 
   useMotionValueEvent(scrollY, "change", (latest) => setScrolled(latest > 24));
+
+  useEffect(() => {
+    if (!selectedProject) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedProject(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [selectedProject]);
 
   const toggleFolder = (category: string) => {
     setOpenFolders((prev) =>
@@ -268,7 +311,7 @@ export default function Home() {
                 <motion.article className="project-card" key={project.number} variants={reveal} whileHover={{ y: -5 }}>
                   <div className="project-number">{project.number}</div>
                   <div className="project-image-wrap"><img src={project.image} alt={project.imageAlt} className="project-image" /><div className="project-image-overlay" /><span className="project-annotation">working evidence / {project.number}</span></div>
-                  <div className="project-info"><div className="project-type">{project.type}</div><h3>{project.title}</h3><p>{project.description}</p><div className="tag-row">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><a href={`mailto:abigail.bayod@gmail.com?subject=About%20${project.title}`} className="project-link">Read more <ExternalLink size={15} /></a></div>
+                  <div className="project-info"><div className="project-type">{project.type}</div><h3>{project.title}</h3><p>{project.description}</p><div className="tag-row">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><motion.button className="project-link" onClick={() => setSelectedProject(project)} whileHover={{ y: -2 }}>Read more <ExternalLink size={15} /></motion.button></div>
                 </motion.article>
               ))}
             </motion.div>
@@ -292,6 +335,30 @@ export default function Home() {
       </main>
 
       <motion.footer className="site-footer" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.4 }} variants={reveal}><div className="page-width footer-inner"><div className="footer-brand"><span>abigail / dev</span></div><p>Made with love.<br />© 2026 Abigail Dela Cruz.</p><div className="social-links"><motion.a href="https://github.com/workwithabby/" aria-label="GitHub" whileHover={{ y: -3 }}><Github size={17} /></motion.a><motion.a href="https://linkedin.com/in/workwithabby/" aria-label="LinkedIn" whileHover={{ y: -3 }}><Linkedin size={17} /></motion.a><motion.a href="https://instagram.com/avyail/" aria-label="Instagram" whileHover={{ y: -3 }}><Instagram size={17} /></motion.a><motion.a href="mailto:abigail.bayod@gmail.com" aria-label="Email" whileHover={{ y: -3 }}><Mail size={17} /></motion.a></div></div></motion.footer>
+
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease }} onClick={() => setSelectedProject(null)}>
+            <motion.button className="modal-close" aria-label="Close project details" onClick={() => setSelectedProject(null)} whileHover={{ rotate: 90 }} transition={{ duration: 0.24, ease }}><X size={20} /></motion.button>
+            <motion.div className="modal-shell" role="dialog" aria-modal="true" aria-labelledby="modal-title" initial={{ y: 52, scale: 0.96, opacity: 0 }} animate={{ y: 0, scale: 1, opacity: 1 }} exit={{ y: 34, scale: 0.97, opacity: 0 }} transition={{ duration: 0.46, ease }} onClick={(event) => event.stopPropagation()}>
+              <div className="modal-media"><img src={selectedProject.image} alt={selectedProject.imageAlt} /><span className="modal-annotation">{selectedProject.type}</span></div>
+              <motion.div className="modal-body" initial="hidden" animate="visible" variants={stagger}>
+                <motion.div className="modal-kicker" variants={reveal}><span>{selectedProject.number} / project</span><span>{selectedProject.type}</span></motion.div>
+                <motion.h3 id="modal-title" variants={reveal}>{selectedProject.title}</motion.h3>
+                <motion.p className="modal-role" variants={reveal}>{selectedProject.role}</motion.p>
+                <motion.p className="modal-overview" variants={reveal}>{selectedProject.overview}</motion.p>
+                <motion.div className="modal-highlights" variants={stagger}>
+                  {selectedProject.highlights.map((highlight, index) => (
+                    <motion.div className="modal-highlight" key={highlight} variants={reveal}><span>0{index + 1}</span><p>{highlight}</p></motion.div>
+                  ))}
+                </motion.div>
+                <motion.div className="tag-row modal-tags" variants={reveal}>{selectedProject.tags.map((tag) => <span key={tag}>{tag}</span>)}</motion.div>
+                <motion.a className="button button-dark modal-cta" href={`mailto:abigail.bayod@gmail.com?subject=About%20${selectedProject.title}`} variants={reveal}>Discuss this project <ArrowUpRight size={16} /></motion.a>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
