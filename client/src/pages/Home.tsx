@@ -1,5 +1,5 @@
 /* Quiet Signal, refreshed: white/black surfaces with signal pink, a calmer About narrative, and motion that feels like paper sliding into place. */
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "framer-motion";
 import { useState } from "react";
 import {
   ArrowDownRight,
@@ -7,6 +7,8 @@ import {
   Check,
   Code2,
   ExternalLink,
+  Folder,
+  FolderOpen,
   Github,
   Instagram,
   Linkedin,
@@ -22,6 +24,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 const navItems = [
   { label: "About", href: "#about" },
+  { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#work" },
   { label: "Process", href: "#process" },
   { label: "Contact", href: "#contact" },
@@ -53,18 +56,12 @@ const projects = [
 const skills = ["UI development", "Responsive systems", "UX mapping", "Database basics", "Technical writing", "Team collaboration"];
 
 const techStack = [
-  { name: "React", tag: "Frontend" },
-  { name: "TypeScript", tag: "Frontend" },
-  { name: "Tailwind CSS", tag: "Frontend" },
-  { name: "Framer Motion", tag: "Build" },
-  { name: "Node.js", tag: "Backend" },
-  { name: "Express", tag: "Backend" },
-  { name: "PostgreSQL", tag: "Data" },
-  { name: "Firebase", tag: "Data" },
-  { name: "Vite", tag: "Build" },
-  { name: "Git & GitHub", tag: "Tools" },
-  { name: "Figma", tag: "Tools" },
-  { name: "Vitest", tag: "Tools" },
+  { category: "Frontend", items: ["HTML", "CSS", "JavaScript", "React", "TypeScript", "Tailwind CSS", "Framer Motion"] },
+  { category: "Backend", items: ["PHP", "MySQL", "PostgreSQL"] },
+  { category: "Version control", items: ["Git & GitHub"] },
+  { category: "Design & prototyping", items: ["Figma", "Canva"] },
+  { category: "Game development", items: ["Unity"] },
+  { category: "Motion / video editing", items: ["Adobe After Effects"] },
 ];
 
 const ease = [0.23, 1, 0.32, 1] as const;
@@ -89,6 +86,18 @@ function scrollToSection(href: string) {
 export default function Home() {
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openFolders, setOpenFolders] = useState<string[]>([]);
+  const [scrolled, setScrolled] = useState(false);
+  const { scrollY, scrollYProgress } = useScroll();
+  const headerProgress = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: 0.4 });
+
+  useMotionValueEvent(scrollY, "change", (latest) => setScrolled(latest > 24));
+
+  const toggleFolder = (category: string) => {
+    setOpenFolders((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+    );
+  };
 
   const handleNav = (href: string) => {
     setMenuOpen(false);
@@ -107,19 +116,25 @@ export default function Home() {
 
   return (
     <div className="site-shell">
+      <motion.div className="bg-ambient" aria-hidden="true" animate={{ x: [0, 46, 0], y: [0, -34, 0], scale: [1, 1.07, 1] }} transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }} />
+      <div className="grain-overlay" aria-hidden="true" />
       <aside className="identity-rail" aria-label="Portfolio identity rail">
         <div className="rail-vertical-label">abigail / dev · bsit</div>
         <div className="rail-bottom"><span>manila</span><span>2026</span></div>
       </aside>
 
-      <motion.header className="site-header" initial={{ y: -18, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.55, ease }}>
+      <motion.header className={`site-header${scrolled ? " is-scrolled" : ""}`} initial={{ y: -18, opacity: 0 }} animate={{ y: 0, opacity: 1, boxShadow: scrolled ? "0 26px 46px -34px rgba(0,0,0,0.45)" : "0 0 0 rgba(0,0,0,0)" }} transition={{ duration: 0.55, ease }}>
         <div className="header-inner">
           <a href="#top" className="brand" aria-label="Abigail Dela Cruz home">
             <span className="brand-wordmark">abigail <em>/</em> dev</span>
+            <span className="brand-live" aria-hidden="true" />
           </a>
           <nav className="desktop-nav" aria-label="Primary navigation">
             {navItems.map((item) => (
-              <motion.button key={item.href} whileHover={{ y: -2 }} transition={{ duration: 0.18 }} onClick={() => handleNav(item.href)}>{item.label}</motion.button>
+              <motion.button className="nav-link" key={item.href} whileHover="hover" whileTap={{ scale: 0.96 }} onClick={() => handleNav(item.href)}>
+                {item.label}
+                <motion.span className="nav-underline" initial={{ scaleX: 0, opacity: 0 }} variants={{ hover: { scaleX: 1, opacity: 1 } }} transition={{ duration: 0.26, ease }} />
+              </motion.button>
             ))}
           </nav>
           <div className="header-actions">
@@ -144,15 +159,17 @@ export default function Home() {
             </motion.nav>
           )}
         </AnimatePresence>
+        <motion.div className="header-progress" style={{ scaleX: headerProgress }} />
       </motion.header>
 
       <main id="top">
         <motion.section className="hero-section section-pad" initial="hidden" animate="visible" variants={stagger}>
           <div className="hero-grid page-width">
             <div className="hero-copy">
-              <motion.div className="eyebrow" variants={reveal}><span className="signal-dot" /> 3rd year · BSIT student <span className="eyebrow-line" /></motion.div>
-              <motion.h1 className="hero-title" variants={reveal}>Building a<br /><span>little more</span><br />clarity.</motion.h1>
-              <motion.p className="hero-description" variants={reveal}>I’m Abigail — a student developer learning in public, turning curious questions into clear, useful digital experiences.</motion.p>
+              <motion.div className="eyebrow" variants={reveal}><span className="signal-dot" /> field notes / intro <span className="eyebrow-line" /></motion.div>
+              <motion.h1 className="hero-title" variants={reveal}>Hi, I’m <span>Abigail Dela Cruz</span></motion.h1>
+              <motion.p className="hero-subheading" variants={reveal}>Information Technology Student</motion.p>
+              <motion.p className="hero-description" variants={reveal}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Proin sagittis nisl rhoncus mattis nibh.</motion.p>
               <motion.div className="hero-actions" variants={reveal}>
                 <motion.button className="button button-dark" onClick={() => handleNav("#work")} whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>See more projects <ArrowDownRight size={17} /></motion.button>
                 <motion.button className="text-link" onClick={handleResume} whileHover={{ y: -2 }}>View résumé <ArrowUpRight size={16} /></motion.button>
@@ -174,7 +191,7 @@ export default function Home() {
 
         <motion.section id="about" className="about-section section-pad section-cream" initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <div className="about-grid page-width">
-            <motion.div className="section-label" variants={reveal}><span>02</span><span className="vertical-rule" /><span>About</span></motion.div>
+            <motion.div className="section-label" variants={reveal}><span>01</span><span className="vertical-rule" /><span>About</span></motion.div>
             <div className="about-content">
               <motion.div className="about-lead" variants={reveal}>
                 <div className="about-meta">profile / 2026 <span>open to learning</span></div>
@@ -198,18 +215,45 @@ export default function Home() {
           </div>
         </motion.section>
 
-        <motion.section className="skills-section section-pad" initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
+        <motion.section id="skills" className="skills-section section-pad" initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <div className="skills-grid page-width">
-            <motion.div className="section-label" variants={reveal}><span>03</span><span className="vertical-rule" /><span>Working toolkit</span></motion.div>
+            <motion.div className="section-label" variants={reveal}><span>02</span><span className="vertical-rule" /><span>Skills</span></motion.div>
             <div className="skills-content">
               <motion.div className="skills-heading-row" variants={reveal}><h2 className="section-title">What I bring<br /><em>to the table.</em></h2><p className="skills-caption">A growing set of practical skills, built through coursework, side projects, and generous teammates.</p></motion.div>
               <motion.div className="skill-list" variants={stagger}>
                 {skills.map((skill, index) => <motion.div className="skill-row" key={skill} variants={reveal} whileHover={{ x: 8 }}><span>0{index + 1}</span><strong>{skill}</strong><ArrowUpRight size={17} /></motion.div>)}
               </motion.div>
               <div className="tech-stack">
-                <div className="tech-stack-head"><span>Tech Stack</span><span>the tools I reach for</span></div>
-                <motion.div className="tech-grid" variants={stagger}>
-                  {techStack.map((tech) => <motion.div className="tech-item" key={tech.name} variants={reveal} whileHover={{ y: -3 }}><span className="tech-tag">{tech.tag}</span><strong>{tech.name}</strong></motion.div>)}
+                <div className="tech-stack-head"><span>Tech Stack</span><span>click a folder to explore</span></div>
+                <motion.div className="folder-grid" variants={stagger}>
+                  {techStack.map((group) => {
+                    const isOpen = openFolders.includes(group.category);
+                    return (
+                      <motion.div className="tech-folder" key={group.category} variants={reveal}>
+                        <motion.button className="folder-cover" onClick={() => toggleFolder(group.category)} aria-expanded={isOpen} whileTap={{ scale: 0.98 }}>
+                          <span className="folder-tab" />
+                          <span className="folder-icon">{isOpen ? <FolderOpen size={17} /> : <Folder size={17} />}</span>
+                          <span className="folder-name">{group.category}</span>
+                          <span className="folder-count">{group.items.length}</span>
+                          <ArrowDownRight size={14} className="folder-chevron" />
+                        </motion.button>
+                        <AnimatePresence initial={false}>
+                          {isOpen && (
+                            <motion.div className="folder-contents" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.42, ease }}>
+                              <motion.ul className="folder-files" initial="hidden" animate="visible" variants={stagger}>
+                                {group.items.map((tech) => (
+                                  <motion.li className="folder-file" key={tech} variants={reveal}>
+                                    <span className="file-dot" />
+                                    <span>{tech}</span>
+                                  </motion.li>
+                                ))}
+                              </motion.ul>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    );
+                  })}
                 </motion.div>
               </div>
             </div>
@@ -218,7 +262,7 @@ export default function Home() {
 
         <motion.section id="work" className="work-section section-pad section-ink" initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <div className="page-width">
-            <motion.div className="work-heading" variants={reveal}><div className="section-label section-label-light"><span>05</span><span className="vertical-rule" /><span>Projects</span></div><p>Small projects, useful questions.<br />Always a work in progress.</p></motion.div>
+            <motion.div className="work-heading" variants={reveal}><div className="section-label section-label-light"><span>03</span><span className="vertical-rule" /><span>Projects</span></div><p>Small projects, useful questions.<br />Always a work in progress.</p></motion.div>
             <motion.div className="projects-list" variants={stagger}>
               {projects.map((project) => (
                 <motion.article className="project-card" key={project.number} variants={reveal} whileHover={{ y: -5 }}>
@@ -234,14 +278,14 @@ export default function Home() {
 
         <motion.section id="process" className="process-section section-pad section-cream" initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <div className="process-grid page-width">
-            <motion.div className="section-label" variants={reveal}><span>06</span><span className="vertical-rule" /><span>Process</span></motion.div>
+            <motion.div className="section-label" variants={reveal}><span>04</span><span className="vertical-rule" /><span>Process</span></motion.div>
             <div className="process-content"><motion.div className="process-lead" variants={reveal}><h2 className="section-title">Make room<br /><em>for the messy middle.</em></h2><p className="body-copy">The best part of a project is usually the bit between the first idea and the final polish. That’s where I listen, test, learn, and make the work more honest.</p></motion.div><motion.div className="process-steps" variants={stagger}><motion.div className="process-step" variants={reveal}><span>01</span><div><strong>Listen closely</strong><p>Get clear on the person, the problem, and the constraint.</p></div></motion.div><motion.div className="process-step" variants={reveal}><span>02</span><div><strong>Make it visible</strong><p>Turn assumptions into maps, sketches, and something we can react to.</p></div></motion.div><motion.div className="process-step" variants={reveal}><span>03</span><div><strong>Keep it useful</strong><p>Build the simplest version that teaches us what to do next.</p></div></motion.div></motion.div></div>
           </div>
         </motion.section>
 
         <motion.section id="contact" className="contact-section section-pad" initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <div className="contact-grid page-width">
-            <motion.div className="contact-label" variants={reveal}><span>07</span><span className="vertical-rule" /><span>Contact me!</span></motion.div>
+            <motion.div className="contact-label" variants={reveal}><span>05</span><span className="vertical-rule" /><span>Contact me!</span></motion.div>
             <motion.div className="contact-content" variants={reveal}><p className="contact-kicker">Have a problem worth<br /><em>thinking through?</em></p><h2>Let’s make<br /><span>something useful.</span></h2><motion.button className="contact-button" onClick={handleContact} whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>Start a conversation <Send size={17} /></motion.button><div className="contact-meta"><span>abigail.bayod@gmail.com</span><span>available for internships · 2028</span></div></motion.div>
           </div>
         </motion.section>
