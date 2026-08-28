@@ -401,7 +401,11 @@
     .hero-description { max-width: 300px; font-size: 15px; line-height: 1.6; }
     .hero-actions { flex-wrap: wrap; gap: 18px; margin-top: 24px; }
     .hero-note { margin-top: 26px; }
-    .hero-visual { padding: 0 14px 20px 0; }
+    .hero-visual { padding: 0; }
+    .hero-image-wrap { width: calc(100% - 40px); max-width: 420px; margin: 0 auto; }
+    .accent-star { top: -22px; left: -10px; }
+    .accent-dots { top: 18px; right: -12px; }
+    .accent-squiggle { right: -16px; bottom: -16px; }
     .hero-side-label { display: none; }
     .hero-rule { margin-top: 20px; }
     .about-grid, .skills-grid, .contact-grid { display: block; }
@@ -430,7 +434,12 @@
     .skill-row strong { font-size: 15px; }
     .tech-stack { margin-top: 28px; }
     .tech-stack-head { margin-bottom: 14px; }
-    .folder-cover { min-height: 48px; }
+    .folder-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .folder-cover { min-height: 48px; gap: 8px; padding: 12px 12px; }
+    .folder-cover .folder-icon { flex: 0 0 auto; width: 24px; height: 24px; }
+    .folder-name { min-width: 0; flex: 1 1 auto; font-size: 12px; line-height: 1.25; }
+    .folder-count { flex: 0 0 auto; }
+    .folder-chevron { flex: 0 0 auto; margin-left: 0; }
     .work-heading { margin-bottom: 30px; }
     .work-heading > p { margin-top: -12px; margin-left: 32px; text-align: left; }
     .projects-list { gap: 30px; }
@@ -472,6 +481,7 @@
     .page-width, .header-inner { width: calc(100% - 28px); }
     .hero-title { font-size: clamp(36px, 11.5vw, 48px); }
     .hero-description { font-size: 14px; }
+    .hero-image-wrap { width: calc(100% - 32px); }
     .hero-actions { flex-direction: column; align-items: flex-start; gap: 16px; }
     .hero-note { font-size: 10px; }
     .section-pad { padding: 44px 0; }

@@ -90,10 +90,10 @@ const skills = ["UI development", "Responsive systems", "UX mapping", "Database 
 const techStack = [
   { category: "Frontend", items: ["HTML", "CSS", "JavaScript", "React", "TypeScript", "Tailwind CSS", "Framer Motion"] },
   { category: "Backend", items: ["PHP", "MySQL", "PostgreSQL"] },
-  { category: "Version control", items: ["Git & GitHub"] },
-  { category: "Design & prototyping", items: ["Figma", "Canva"] },
-  { category: "Game development", items: ["Unity"] },
-  { category: "Motion / video editing", items: ["Adobe After Effects"] },
+  { category: "Version Control", items: ["Git & GitHub"] },
+  { category: "Design & Prototyping", items: ["Figma", "Canva"] },
+  { category: "Deployment & Hosting", items: ["Vercel", "Netlify", "Hostinger"] },
+  { category: "Motion/Video Editing", items: ["Adobe After Effects"] },
 ];
 
 const goalAxis = [
